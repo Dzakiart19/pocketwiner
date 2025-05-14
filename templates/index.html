@@ -1,0 +1,226 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+<style>
+    .login-container {
+        max-width: 450px;
+        margin: 80px auto;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        background: linear-gradient(145deg, #2d3748 0%, #1a202c 100%);
+        color: #e2e8f0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .login-container::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(56,178,172,0.1) 0%, rgba(56,178,172,0) 70%);
+        z-index: 0;
+    }
+    
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .login-form {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .form-floating {
+        margin-bottom: 20px;
+    }
+    
+    .form-floating label {
+        color: #718096;
+    }
+    
+    .form-control {
+        background-color: #2d3748;
+        border: 1px solid #4a5568;
+        color: #e2e8f0;
+    }
+    
+    .form-control:focus {
+        background-color: #2d3748;
+        color: #e2e8f0;
+        border-color: #38b2ac;
+        box-shadow: 0 0 0 0.25rem rgba(56, 178, 172, 0.25);
+    }
+    
+    .btn-login {
+        background: linear-gradient(to right, #38b2ac, #319795);
+        border: none;
+        color: white;
+        padding: 12px;
+        font-weight: bold;
+        border-radius: 8px;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-login:hover {
+        background: linear-gradient(to right, #319795, #2c7a7b);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(49, 151, 149, 0.4);
+    }
+    
+    .welcome-text {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .welcome-text h1 {
+        font-size: 2.5rem;
+        background: linear-gradient(to right, #38b2ac, #81e6d9);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 15px;
+    }
+    
+    .welcome-text p {
+        color: #a0aec0;
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+    
+    .features {
+        display: flex;
+        justify-content: space-around;
+        margin: 40px 0;
+        flex-wrap: wrap;
+    }
+    
+    .feature-card {
+        width: 300px;
+        background: #2d3748;
+        border-radius: 12px;
+        padding: 25px;
+        margin: 15px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+    }
+    
+    .feature-icon {
+        font-size: 2.5rem;
+        color: #38b2ac;
+        margin-bottom: 15px;
+    }
+    
+    .feature-title {
+        font-size: 1.3rem;
+        color: #e2e8f0;
+        margin-bottom: 10px;
+    }
+    
+    .feature-text {
+        color: #a0aec0;
+        font-size: 0.95rem;
+    }
+    
+    /* Landing page content is hidden when logged in */
+    .landing-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .login-container {
+            margin: 40px 20px;
+        }
+        
+        .features {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+    <script>
+        window.location.href = "{{ url_for('dashboard') }}";
+    </script>
+{% else %}
+    <div class="landing-content">
+        <div class="welcome-text">
+            <h1>HermesQuantum AI</h1>
+            <p>Platform Sinyal Trading OTC dengan Kecerdasan Buatan Terpresisi</p>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="feature-title">AI Prediction Engine</h3>
+                <p class="feature-text">Menggunakan algoritma XGBoost dengan akurasi tinggi untuk menganalisis pola pasar dan memberikan sinyal presisi.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="feature-title">Multi-Indikator Teknikal</h3>
+                <p class="feature-text">Mengintegrasikan RSI, MACD, EMA, Bollinger Bands, dan Volume untuk analisis konfluensi yang komprehensif.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <h3 class="feature-title">Sinyal Real-time</h3>
+                <p class="feature-text">Mengirimkan sinyal presisi 10 detik sebelum open candle melalui Telegram dengan detail analisis lengkap.</p>
+            </div>
+        </div>
+        
+        <div class="login-container">
+            <div class="login-header">
+                <svg class="logo" width="80" height="80" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="#2d3748" stroke="#38b2ac" stroke-width="2"/>
+                    <path d="M65,30 L50,70 L35,30" fill="none" stroke="#38b2ac" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="50" cy="50" r="10" fill="#38b2ac"/>
+                </svg>
+                <h2>Login</h2>
+                <p>Masuk ke dashboard HermesQuantum AI</p>
+            </div>
+            
+            <form class="login-form" method="POST" action="{{ url_for('login') }}">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                    <label for="username">Username</label>
+                </div>
+                
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    <label for="password">Password</label>
+                </div>
+                
+                <button type="submit" class="btn btn-login">
+                    <i class="fas fa-sign-in-alt me-2"></i>
+                    Masuk
+                </button>
+            </form>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,285 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+<style>
+    .settings-header {
+        margin-bottom: 30px;
+    }
+    
+    .settings-form {
+        background: #2d3748;
+        border-radius: 10px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .form-section {
+        margin-bottom: 30px;
+        border-bottom: 1px solid #4a5568;
+        padding-bottom: 20px;
+    }
+    
+    .form-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    
+    .form-section-title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        color: #e2e8f0;
+    }
+    
+    .form-section-title i {
+        margin-right: 10px;
+        color: #38b2ac;
+        font-size: 1.2rem;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        color: #a0aec0;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #4a5568;
+        border-radius: 5px;
+        background-color: #1a202c;
+        color: #e2e8f0;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: #38b2ac;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(56, 178, 172, 0.25);
+    }
+    
+    .form-text {
+        display: block;
+        margin-top: 5px;
+        font-size: 0.85rem;
+        color: #718096;
+    }
+    
+    .form-check-label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    
+    .form-check-input {
+        margin-right: 10px;
+        width: 18px;
+        height: 18px;
+        appearance: none;
+        -webkit-appearance: none;
+        background-color: #1a202c;
+        border: 1px solid #4a5568;
+        border-radius: 4px;
+        cursor: pointer;
+        position: relative;
+    }
+    
+    .form-check-input:checked {
+        background-color: #38b2ac;
+        border-color: #38b2ac;
+    }
+    
+    .form-check-input:checked::after {
+        content: '\2713';
+        font-size: 14px;
+        color: white;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    .save-btn {
+        background: #38b2ac;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .save-btn i {
+        margin-right: 8px;
+    }
+    
+    .save-btn:hover {
+        background: #319795;
+        transform: translateY(-2px);
+    }
+    
+    .tooltip-info {
+        display: inline-block;
+        position: relative;
+        margin-left: 8px;
+        color: #a0aec0;
+        cursor: pointer;
+    }
+    
+    .tooltip-info:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+    }
+    
+    .tooltip-text {
+        visibility: hidden;
+        width: 200px;
+        background-color: #4a5568;
+        color: #e2e8f0;
+        text-align: center;
+        border-radius: 6px;
+        padding: 10px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 0.8rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .tooltip-text::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #4a5568 transparent transparent transparent;
+    }
+    
+    @media (max-width: 768px) {
+        .settings-form {
+            padding: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="settings-header">
+    <h1>Pengaturan</h1>
+    <p>Konfigurasi bot sinyal trading HermesQuantum AI</p>
+</div>
+
+<form class="settings-form" method="POST" action="{{ url_for('settings') }}">
+    <div class="form-section">
+        <h3 class="form-section-title">
+            <i class="fab fa-telegram"></i>
+            Konfigurasi Telegram
+        </h3>
+        
+        <div class="alert alert-info" role="alert">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>Konfigurasi Bot Telegram</strong> telah diatur melalui environment variables.
+        </div>
+        
+        <div class="form-group">
+            <label for="telegram_token" class="form-label">Token Bot Telegram</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="telegram_token" name="telegram_token" value="{{ settings.telegram_token }}" placeholder="Menggunakan token dari environment variable" readonly>
+                <span class="input-group-text"><i class="fas fa-check-circle text-success"></i></span>
+            </div>
+            <small class="form-text text-success">Token telah dikonfigurasi melalui environment variable.</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="telegram_chat_id" class="form-label">Chat ID Telegram</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="telegram_chat_id" name="telegram_chat_id" value="{{ settings.telegram_chat_id }}" placeholder="Menggunakan chat ID dari environment variable" readonly>
+                <span class="input-group-text"><i class="fas fa-check-circle text-success"></i></span>
+            </div>
+            <small class="form-text text-success">Chat ID telah dikonfigurasi melalui environment variable.</small>
+        </div>
+    </div>
+    
+    <div class="form-section">
+        <h3 class="form-section-title">
+            <i class="fas fa-exchange-alt"></i>
+            API Pocket Option
+        </h3>
+        
+        <div class="form-group">
+            <label for="pocket_option_api_key" class="form-label">API Key Pocket Option</label>
+            <input type="password" class="form-control" id="pocket_option_api_key" name="pocket_option_api_key" value="{{ settings.pocket_option_api_key }}" placeholder="Masukkan API key Pocket Option">
+            <small class="form-text">Kunci API untuk akses data pasar Pocket Option.</small>
+        </div>
+    </div>
+    
+    <div class="form-section">
+        <h3 class="form-section-title">
+            <i class="fas fa-sliders-h"></i>
+            Konfigurasi Trading
+        </h3>
+        
+        <div class="form-group">
+            <label for="signal_time_before_candle" class="form-label">Waktu Sinyal Sebelum Candle (detik)</label>
+            <input type="number" class="form-control" id="signal_time_before_candle" name="signal_time_before_candle" value="{{ settings.signal_time_before_candle }}" min="1" max="60">
+            <small class="form-text">Berapa detik sebelum candle baru untuk mengirim sinyal.</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="min_confidence_threshold" class="form-label">
+                Threshold Kepercayaan Minimum (%)
+                <span class="tooltip-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="tooltip-text">Sinyal hanya akan dikirim jika confidence melebihi nilai ini.</span>
+                </span>
+            </label>
+            <input type="number" class="form-control" id="min_confidence_threshold" name="min_confidence_threshold" value="{{ settings.min_confidence_threshold }}" min="50" max="100">
+        </div>
+        
+        <div class="form-group">
+            <label for="trading_timeframe" class="form-label">Timeframe Trading</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="trading_timeframe_display" value="M1 (1 menit)" readonly>
+                <span class="input-group-text"><i class="fas fa-lock text-warning"></i></span>
+            </div>
+            <input type="hidden" id="trading_timeframe" name="trading_timeframe" value="M1">
+            <small class="form-text text-warning">Bot dioptimalkan khusus untuk timeframe M1.</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="active_symbols" class="form-label">Simbol Trading Aktif</label>
+            <textarea class="form-control" id="active_symbols" name="active_symbols" rows="3" placeholder="Masukkan simbol yang dipisahkan koma">{{ settings.active_symbols }}</textarea>
+            <small class="form-text">Daftar simbol trading yang akan dianalisis, dipisahkan dengan koma.</small>
+        </div>
+        
+        <div class="form-group">
+            <div class="form-check-label">
+                <input type="checkbox" class="form-check-input" id="active_status" name="active_status" {% if settings.active_status %}checked{% endif %}>
+                Aktifkan Bot Saat Ini
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-end">
+        <button type="submit" class="save-btn">
+            <i class="fas fa-save"></i>
+            Simpan Pengaturan
+        </button>
+    </div>
+</form>
+{% endblock %}

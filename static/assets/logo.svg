@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+  <!-- Background Circle -->
+  <circle cx="50" cy="50" r="45" fill="#2d3748" stroke="#38b2ac" stroke-width="2"/>
+  
+  <!-- Hermes Symbol (stylized as H with wings) -->
+  <path d="M65,30 L50,70 L35,30" fill="none" stroke="#38b2ac" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Quantum Core -->
+  <circle cx="50" cy="50" r="10" fill="#38b2ac"/>
+  
+  <!-- Orbital Lines (Quantum effect) -->
+  <ellipse cx="50" cy="50" rx="25" ry="15" fill="none" stroke="#38b2ac" stroke-width="1.5" transform="rotate(30 50 50)" stroke-dasharray="5,3" opacity="0.5"/>
+  <ellipse cx="50" cy="50" rx="25" ry="15" fill="none" stroke="#38b2ac" stroke-width="1.5" transform="rotate(150 50 50)" stroke-dasharray="5,3" opacity="0.5"/>
+  
+  <!-- AI Nodes -->
+  <circle cx="30" cy="25" r="3" fill="#38b2ac" opacity="0.8"/>
+  <circle cx="70" cy="25" r="3" fill="#38b2ac" opacity="0.8"/>
+  <circle cx="27" cy="55" r="3" fill="#38b2ac" opacity="0.8"/>
+  <circle cx="73" cy="55" r="3" fill="#38b2ac" opacity="0.8"/>
+  <circle cx="50" cy="75" r="3" fill="#38b2ac" opacity="0.8"/>
+  
+  <!-- Connection Lines -->
+  <line x1="30" y1="25" x2="50" y2="50" stroke="#38b2ac" stroke-width="1" opacity="0.6"/>
+  <line x1="70" y1="25" x2="50" y2="50" stroke="#38b2ac" stroke-width="1" opacity="0.6"/>
+  <line x1="27" y1="55" x2="50" y2="50" stroke="#38b2ac" stroke-width="1" opacity="0.6"/>
+  <line x1="73" y1="55" x2="50" y2="50" stroke="#38b2ac" stroke-width="1" opacity="0.6"/>
+  <line x1="50" y1="75" x2="50" y2="50" stroke="#38b2ac" stroke-width="1" opacity="0.6"/>
+</svg>

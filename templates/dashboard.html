@@ -1,0 +1,399 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+<style>
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .bot-controls {
+        display: flex;
+        align-items: center;
+        background: #2d3748;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+    }
+    
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+    }
+    
+    .status-dot {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin-right: 10px;
+        animation: pulse 2s infinite;
+    }
+    
+    .status-dot.active {
+        background-color: #38b2ac;
+    }
+    
+    .status-dot.inactive {
+        background-color: #fc8181;
+        animation: none;
+    }
+    
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(56, 178, 172, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(56, 178, 172, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(56, 178, 172, 0);
+        }
+    }
+    
+    .toggle-bot-btn {
+        background: #38b2ac;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .toggle-bot-btn:hover {
+        background: #319795;
+    }
+    
+    .toggle-bot-btn.stop {
+        background: #fc8181;
+    }
+    
+    .toggle-bot-btn.stop:hover {
+        background: #e53e3e;
+    }
+    
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .stats-card {
+        background: #2d3748;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stats-card h3 {
+        margin-top: 0;
+        color: #e2e8f0;
+        border-bottom: 1px solid #4a5568;
+        padding-bottom: 10px;
+        font-size: 1.1rem;
+    }
+    
+    .stats-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #38b2ac;
+        margin: 15px 0;
+    }
+    
+    .stats-chart-container {
+        height: 150px;
+    }
+    
+    .signals-container {
+        background: #2d3748;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .signals-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .signals-header h3 {
+        margin: 0;
+        color: #e2e8f0;
+    }
+    
+    .signals-refresh {
+        background: transparent;
+        color: #a0aec0;
+        border: 1px solid #4a5568;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .signals-refresh:hover {
+        color: #e2e8f0;
+        border-color: #38b2ac;
+    }
+    
+    .signals-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .signals-table th, 
+    .signals-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #4a5568;
+    }
+    
+    .signals-table th {
+        color: #a0aec0;
+        font-weight: normal;
+    }
+    
+    .signals-table tbody tr {
+        transition: background-color 0.3s;
+    }
+    
+    .signals-table tbody tr:hover {
+        background-color: #3a4a5e;
+    }
+    
+    .signal-result {
+        padding: 5px 10px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+    
+    .signal-result.win {
+        background-color: rgba(56, 178, 172, 0.15);
+        color: #38b2ac;
+    }
+    
+    .signal-result.loss {
+        background-color: rgba(252, 129, 129, 0.15);
+        color: #fc8181;
+    }
+    
+    .signal-result.draw {
+        background-color: rgba(214, 188, 0, 0.15);
+        color: #d6bc00;
+    }
+    
+    .signal-result.pending {
+        background-color: rgba(160, 174, 192, 0.15);
+        color: #a0aec0;
+    }
+    
+    .signal-direction.buy {
+        color: #38b2ac;
+    }
+    
+    .signal-direction.sell {
+        color: #fc8181;
+    }
+    
+    .signal-confidence {
+        width: 100%;
+        background-color: #4a5568;
+        height: 6px;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+    
+    .signal-confidence-bar {
+        height: 100%;
+        background-color: #38b2ac;
+    }
+    
+    .signal-detail-link {
+        color: #38b2ac;
+        text-decoration: none;
+    }
+    
+    .signal-detail-link:hover {
+        text-decoration: underline;
+    }
+    
+    @media (max-width: 992px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .signals-table {
+            font-size: 0.9rem;
+        }
+        
+        .signals-table th,
+        .signals-table td {
+            padding: 10px;
+        }
+        
+        .hide-on-mobile {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <span class="date">{{ now.strftime('%A, %d %B %Y') }}</span>
+</div>
+
+<div class="bot-controls">
+    <div class="status-indicator">
+        <div class="status-dot active"></div>
+        <span>Status: Aktif</span>
+    </div>
+    
+    <div class="bot-status-message">
+        <button type="button" class="toggle-bot-btn btn-success" disabled>
+            <i class="fas fa-check-circle me-2"></i> Bot Berjalan Otomatis
+        </button>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="stats-card">
+        <h3><i class="fas fa-chart-pie me-2"></i> Performa Trading</h3>
+        <div class="stats-value" id="win-rate">--</div>
+        <div class="stats-chart-container">
+            <canvas id="performanceChart"></canvas>
+        </div>
+    </div>
+    
+    <div class="stats-card">
+        <h3><i class="fas fa-bolt me-2"></i> Aktivitas Sinyal</h3>
+        <div class="stats-value" id="signal-count">0</div>
+        <div class="stats-chart-container">
+            <canvas id="signalActivityChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="signals-container">
+    <div class="signals-header">
+        <h3><i class="fas fa-signal me-2"></i> Sinyal Terbaru</h3>
+        <button id="refreshSignals" class="signals-refresh">
+            <i class="fas fa-sync-alt me-2"></i> Refresh
+        </button>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="signals-table">
+            <thead>
+                <tr>
+                    <th>Waktu</th>
+                    <th>Simbol</th>
+                    <th>Arah</th>
+                    <th class="hide-on-mobile">Confidence</th>
+                    <th>Hasil</th>
+                    <th>Detail</th>
+                </tr>
+            </thead>
+            <tbody id="signalsTableBody">
+                {% for signal in signals %}
+                <tr>
+                    <td>{{ signal.executed_at.strftime('%H:%M:%S') }}</td>
+                    <td>{{ signal.symbol }} OTC</td>
+                    <td class="signal-direction {% if signal.direction == 'BUY' %}buy{% else %}sell{% endif %}">
+                        {{ signal.direction }}
+                        {% if signal.direction == 'BUY' %}
+                            <i class="fas fa-arrow-up ms-1"></i>
+                        {% else %}
+                            <i class="fas fa-arrow-down ms-1"></i>
+                        {% endif %}
+                    </td>
+                    <td class="hide-on-mobile">
+                        <div class="signal-confidence">
+                            <div class="signal-confidence-bar" style="width: {{ signal.confidence }}%"></div>
+                        </div>
+                        <small>{{ signal.confidence }}%</small>
+                    </td>
+                    <td>
+                        {% if signal.result %}
+                            <span class="signal-result {{ signal.result.lower() }}">
+                                {% if signal.result == 'WIN' %}
+                                    <i class="fas fa-check-circle me-1"></i> WIN
+                                {% elif signal.result == 'LOSS' %}
+                                    <i class="fas fa-times-circle me-1"></i> LOSS
+                                {% elif signal.result == 'DRAW' %}
+                                    <i class="fas fa-minus-circle me-1"></i> DRAW
+                                {% endif %}
+                            </span>
+                        {% else %}
+                            <span class="signal-result pending">
+                                <i class="fas fa-clock me-1"></i> PENDING
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('signal_detail', signal_id=signal.id) }}" class="signal-detail-link">
+                            <i class="fas fa-external-link-alt me-1"></i> Detail
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                
+                {% if not signals %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 30px;">
+                        <i class="fas fa-inbox fa-2x mb-3" style="color: #4a5568;"></i>
+                        <p>Belum ada sinyal yang dihasilkan</p>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+    // Inisialisasi data awal untuk chart
+    document.addEventListener('DOMContentLoaded', function() {
+        // Data untuk performance chart (win rate)
+        const wins = {{ (signals|selectattr('result', 'equalto', 'WIN')|list|length) }};
+        const losses = {{ (signals|selectattr('result', 'equalto', 'LOSS')|list|length) }};
+        const draws = {{ (signals|selectattr('result', 'equalto', 'DRAW')|list|length) }};
+        
+        // Hitung win rate
+        const total = wins + losses + draws;
+        const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
+        
+        // Update win rate di dashboard
+        document.getElementById('win-rate').textContent = `${winRate}%`;
+        
+        // Update signal count di dashboard
+        document.getElementById('signal-count').textContent = `${total}`;
+        
+        // Inisialisasi chart
+        initPerformanceChart(wins, losses, draws);
+        
+        // Inisialisasi chart aktivitas sinyal
+        const signalCounts = Array(7).fill(0); // Data dummy awal
+        initSignalActivityChart(signalCounts);
+        
+        // Atur event listener untuk tombol refresh
+        document.getElementById('refreshSignals').addEventListener('click', function() {
+            fetchLatestSignals();
+        });
+    });
+</script>
+{% endblock %}
